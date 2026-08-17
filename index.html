@@ -28,6 +28,34 @@
 
   <dialog id="slotDialog"><form id="slotForm"><div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button type="button" id="closeSlotDialog" class="icon-btn">×</button></div><label>Type<select id="slotType"><option value="dish">Dish</option><option value="leftovers">Leftovers</option><option value="takeaway">Takeaway</option><option value="eating-out">Eating out</option><option value="custom">Custom</option></select></label><div id="slotDishWrap" class="slot-dish-wrap"><label>Dish</label><input id="slotDishSearch" placeholder="Type to search dishes…" autocomplete="off"><div id="slotDishResults" class="dish-results"><p class="muted ingredient-empty">Start typing to filter dishes.</p></div><input id="slotDish" type="hidden"></div><label id="slotLabelWrap" hidden>Label<input id="slotLabel" placeholder="e.g. Freezer meal"></label><div class="dialog-actions"><span></span><span></span><button type="button" id="cancelSlotBtn" class="secondary">Cancel</button><button type="submit">Add</button></div></form></dialog>
 
-  <div id="toast" class="toast" hidden></div><script src="app.js"></script>
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+  <script>
+    let editingPlan=null;
+    function closePlanEdit(){planEditDialog.close();editingPlan=null}
+    document.addEventListener('click',function(e){
+      const edit=e.target.closest('[data-edit-meal]');
+      if(!edit)return;
+      const parts=edit.dataset.editMeal.split('|'),day=parts[0],index=Number(parts[1]),slot=state.schedule[day]&&state.schedule[day][index];
+      if(!slot||slot.type==='dish')return;
+      editingPlan={day,index};
+      planEditTitle.textContent=`Edit ${slot.label||slot.type.replace('-',' ')}`;
+      planEditType.value=slot.type;
+      planEditLabel.value=slot.label||'';
+      planEditDialog.showModal();
+    });
+    closePlanEditDialog.onclick=cancelPlanEditBtn.onclick=closePlanEdit;
+    planEditForm.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!editingPlan)return;
+      const slot=state.schedule[editingPlan.day]&&state.schedule[editingPlan.day][editingPlan.index];
+      if(!slot)return;
+      slot.type=planEditType.value;
+      slot.label=planEditLabel.value.trim();
+      closePlanEdit();
+      render();
+      toast('Plan updated');
+    });
+  </script>
 </body>
 </html>
