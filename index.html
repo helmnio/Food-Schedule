@@ -11,11 +11,7 @@
   <header class="topbar">
     <div><span class="eyebrow">FOOD SCHEDULE</span><h1>Plan food. Buy what you need.</h1></div>
   </header>
-  <nav class="tabs" aria-label="App sections">
-    <button class="tab active" data-view="week">Week</button>
-    <button class="tab" data-view="dishes">Dishes</button>
-    <button class="tab" data-view="shopping">Shopping</button>
-  </nav>
+
   <main>
     <section id="week" class="view active">
       <div class="section-head"><div><span class="eyebrow">THIS WEEK</span><h2>Your food schedule</h2></div></div>
@@ -26,37 +22,47 @@
         <div id="extrasList" class="chips"></div>
       </div>
     </section>
+
     <section id="dishes" class="view">
       <div class="section-head"><div><span class="eyebrow">DISH LIBRARY</span><h2>Build your dishes</h2></div><button id="newDishBtn">+ New dish</button></div>
       <input id="dishSearch" class="search" placeholder="Search dishes or ingredients…"><div id="dishGrid" class="dish-grid"></div>
     </section>
+
     <section id="shopping" class="view">
-      <div class="section-head"><div><span class="eyebrow">SHOPPING</span><h2>Your list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div>
+      <div class="section-head"><div><span class="eyebrow">LIST</span><h2>Your shopping list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div>
       <p class="muted">This list updates automatically when you change your week or edit a dish.</p>
       <div class="shopping-toolbar"><div class="item-combobox"><input id="customShopInput" placeholder="Add ingredient, previous item or something new…" autocomplete="off"><div id="shopSuggestions" class="suggestions" hidden></div></div><button id="addShopBtn">Add item</button></div>
       <div class="view-toggle" role="group" aria-label="Shopping list view"><button class="toggle-btn active" data-shop-view="list">List</button><button class="toggle-btn" data-shop-view="meals">By meal</button></div>
       <div id="shoppingList" class="shopping-list"></div>
     </section>
   </main>
+
+  <nav class="tabs bottom-nav" aria-label="App sections">
+    <button class="tab active" data-view="week">Week</button>
+    <button class="tab" data-view="dishes">Dishes</button>
+    <button class="tab" data-view="shopping">List</button>
+  </nav>
+
   <dialog id="dishDialog">
     <form id="dishForm">
       <div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button type="button" id="closeDishDialog" class="icon-btn" aria-label="Close">×</button></div>
       <label>Dish name<input id="dishName" required></label>
       <div class="ingredient-editor">
-        <div class="ingredient-editor-head"><div><strong>Selected ingredients</strong><p class="muted">Only these ingredients belong to this dish. Untick one to remove it.</p></div><span id="ingredientCount" class="count-pill"></span></div>
+        <div class="ingredient-editor-head"><div><strong>Ingredients</strong><p class="muted">These are the ingredients currently in this dish. Untick one to remove it.</p></div><span id="ingredientCount" class="count-pill"></span></div>
         <div id="selectedIngredientPicker" class="ingredient-picker selected-ingredients"></div>
         <div class="ingredient-add-section">
-          <strong>Add ingredients</strong>
-          <p class="muted">Search the ingredient library and tick anything else you want to add.</p>
-          <input id="ingredientSearch" class="search" placeholder="Search ingredients to add…" autocomplete="off">
-          <div id="ingredientPicker" class="ingredient-picker"></div>
-          <div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Ingredient not listed? Add it here…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add ingredient</button></div>
+          <strong>Add ingredient</strong>
+          <p class="muted">Search to add an existing ingredient, or create a custom one.</p>
+          <input id="ingredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off">
+          <div id="ingredientPicker" class="ingredient-picker" hidden></div>
+          <div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add custom</button></div>
         </div>
       </div>
       <label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label>
       <div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button type="button" id="cancelDishBtn" class="secondary">Cancel</button><button type="submit">Save dish</button></div>
     </form>
   </dialog>
+
   <dialog id="slotDialog">
     <form id="slotForm">
       <div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button type="button" id="closeSlotDialog" class="icon-btn" aria-label="Close">×</button></div>
@@ -66,6 +72,8 @@
       <div class="dialog-actions"><span></span><span></span><button type="button" id="cancelSlotBtn" class="secondary">Cancel</button><button type="submit">Add</button></div>
     </form>
   </dialog>
-  <div id="toast" class="toast" hidden></div><script src="app.js"></script>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
 </body>
 </html>
