@@ -1,0 +1,8 @@
+/* Mobile-app style: controls keep their resting appearance on hover. */
+button:hover{background:var(--accent);color:#fff}
+button.secondary:hover{background:#fffafd;color:var(--ink);border-color:var(--line)}
+button.danger:hover{background:#fff0f3;color:var(--danger)}
+.tab:hover{background:transparent;color:#795266}
+.tab.active:hover{background:var(--accent-dark);color:#fff}
+.day .add-slot:hover{background:#fff8fb;border-color:#d99ab8;color:#874660}
+.day-extra-chip button:hover,.chip button:hover
