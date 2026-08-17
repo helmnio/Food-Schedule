@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Food Schedule</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div><span class="eyebrow">FOOD SCHEDULE</span><h1>Plan food. Buy what you need.</h1></div>
+    <button id="importBtn" class="secondary">Import TheMealDB</button>
+  </header>
+
+  <nav class="tabs" aria-label="App sections">
+    <button class="tab active" data-view="week">Week</button>
+    <button class="tab" data-view="dishes">Dishes</button>
+    <button class="tab" data-view="shopping">Shopping</button>
+  </nav>
+
+  <main>
+    <section id="week" class="view active">
+      <div class="section-head"><div><span class="eyebrow">THIS WEEK</span><h2>Your food schedule</h2></div><button id="generateBtn">Generate shopping list</button></div>
+      <div id="weekGrid" class="week-grid"></div>
+      <div class="panel compact">
+        <h3>Weekly extras</h3>
+        <p class="muted">Snacks and drinks that do not need a particular day.</p>
+        <div class="inline-form"><input id="extraInput" placeholder="e.g. Crisps, orange juice"><select id="extraType"><option>Snack</option><option>Drink</option></select><button id="addExtraBtn">Add</button></div>
+        <div id="extrasList" class="chips"></div>
+      </div>
+    </section>
+
+    <section id="dishes" class="view">
+      <div class="section-head"><div><span class="eyebrow">DISH LIBRARY</span><h2>Build your dishes</h2></div><button id="newDishBtn">+ New dish</button></div>
+      <input id="dishSearch" class="search" placeholder="Search dishes or ingredients…">
+      <div id="dishGrid" class="dish-grid"></div>
+    </section>
+
+    <section id="shopping" class="view">
+      <div class="section-head"><div><span class="eyebrow">SHOPPING</span><h2>Your list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div>
+      <div class="inline-form"><input id="customShopInput" placeholder="Add anything else…"><button id="addShopBtn">Add item</button></div>
+      <div id="shoppingList" class="shopping-list"></div>
+    </section>
+  </main>
+
+  <dialog id="dishDialog">
+    <form method="dialog" id="dishForm">
+      <div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button value="cancel" class="icon-btn" aria-label="Close">×</button></div>
+      <label>Dish name<input id="dishName" required></label>
+      <label>Ingredients <span class="muted">one per line</span><textarea id="dishIngredients" rows="12" placeholder="Chicken breast\nOnion\nPeppers"></textarea></label>
+      <label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label>
+      <div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button value="cancel" class="secondary">Cancel</button><button type="submit" value="default">Save dish</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="slotDialog">
+    <form method="dialog" id="slotForm">
+      <div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button value="cancel" class="icon-btn">×</button></div>
+      <label>Type<select id="slotType"><option value="dish">Dish</option><option value="leftovers">Leftovers</option><option value="takeaway">Takeaway</option><option value="eating-out">Eating out</option><option value="custom">Custom</option></select></label>
+      <label id="slotDishWrap">Dish<select id="slotDish"></select></label>
+      <label id="slotLabelWrap" hidden>Label<input id="slotLabel" placeholder="e.g. Freezer meal"></label>
+      <div class="dialog-actions"><span></span><span></span><button value="cancel" class="secondary">Cancel</button><button type="submit">Add</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
