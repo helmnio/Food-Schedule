@@ -42,7 +42,17 @@
     <form id="dishForm">
       <div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button type="button" id="closeDishDialog" class="icon-btn" aria-label="Close">×</button></div>
       <label>Dish name<input id="dishName" required></label>
-      <div class="ingredient-editor"><div class="ingredient-editor-head"><div><strong>Ingredients</strong><p class="muted">Tick what belongs in this dish.</p></div><span id="ingredientCount" class="count-pill"></span></div><input id="ingredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off"><div id="ingredientPicker" class="ingredient-picker"></div><div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Ingredient not listed? Add it here…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add ingredient</button></div></div>
+      <div class="ingredient-editor">
+        <div class="ingredient-editor-head"><div><strong>Selected ingredients</strong><p class="muted">Only these ingredients belong to this dish. Untick one to remove it.</p></div><span id="ingredientCount" class="count-pill"></span></div>
+        <div id="selectedIngredientPicker" class="ingredient-picker selected-ingredients"></div>
+        <div class="ingredient-add-section">
+          <strong>Add ingredients</strong>
+          <p class="muted">Search the ingredient library and tick anything else you want to add.</p>
+          <input id="ingredientSearch" class="search" placeholder="Search ingredients to add…" autocomplete="off">
+          <div id="ingredientPicker" class="ingredient-picker"></div>
+          <div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Ingredient not listed? Add it here…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add ingredient</button></div>
+        </div>
+      </div>
       <label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label>
       <div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button type="button" id="cancelDishBtn" class="secondary">Cancel</button><button type="submit">Save dish</button></div>
     </form>
