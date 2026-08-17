@@ -31,17 +31,11 @@
     const meals=slots.map(slot=>{const changes=mealChanges(slot);return `<div class="history-meal"><strong>${esc(dishName(slot))}</strong>${detailLine('Removed',changes.removed)}${detailLine('Added',changes.added)}</div>`}).join('');
     return `<div class="history-day"><span>${day.slice(0,3)}</span><div class="history-day-content">${meals}${detailLine('Day extras',extras)}</div></div>`;
   }
+  function exampleWeek(title,example){return `<section class="history-week history-week-example"><div class="history-week-head"><div><strong>${title}</strong></div><span class="count-pill">PREVIEW</span></div>${DAYS.map(day=>{const x=example[day];return `<div class="history-day"><span>${day.slice(0,3)}</span><div class="history-day-content"><div class="history-meal"><strong>${esc(x.meal)}</strong>${detailLine('Removed',x.removed)}${detailLine('Added',x.added)}</div>${detailLine('Day extras',x.extras)}</div></div>`}).join('')}</section>`}
   function exampleHistory(){
-    const example={
-      Monday:{meal:'Chicken Curry',removed:['Rice','Peas'],added:['Chips','Spinach'],extras:['Naan','Mango chutney']},
-      Tuesday:{meal:'Spaghetti Bolognese',added:['Garlic bread']},
-      Wednesday:{meal:'Leftovers — Chicken Curry',extras:['Salad']},
-      Thursday:{meal:'Homemade Tacos',removed:['Sour cream','Jalapeños'],added:['Guacamole','Cheese']},
-      Friday:{meal:'Takeaway — Chinese'},
-      Saturday:{meal:'Steak & Chips',extras:['Peppercorn sauce','Onion rings']},
-      Sunday:{meal:'Roast Chicken'}
-    };
-    return `<div class="history-example-note"><strong>Example week</strong><span>This is just a preview. Your real weeks will appear here once you have history.</span></div><section class="history-week history-week-example"><div class="history-week-head"><div><strong>Example</strong></div><span class="count-pill">PREVIEW</span></div>${DAYS.map(day=>{const x=example[day];return `<div class="history-day"><span>${day.slice(0,3)}</span><div class="history-day-content"><div class="history-meal"><strong>${esc(x.meal)}</strong>${detailLine('Removed',x.removed)}${detailLine('Added',x.added)}</div>${detailLine('Day extras',x.extras)}</div></div>`}).join('')}</section>`;
+    const weekOne={Monday:{meal:'Chicken Curry',removed:['Rice','Peas'],added:['Chips','Spinach'],extras:['Naan','Mango chutney']},Tuesday:{meal:'Spaghetti Bolognese',added:['Garlic bread']},Wednesday:{meal:'Leftovers — Chicken Curry',extras:['Salad']},Thursday:{meal:'Homemade Tacos',removed:['Sour cream','Jalapeños'],added:['Guacamole','Cheese']},Friday:{meal:'Takeaway — Chinese'},Saturday:{meal:'Steak & Chips',extras:['Peppercorn sauce','Onion rings']},Sunday:{meal:'Roast Chicken'}};
+    const weekTwo={Monday:{meal:'Chilli Con Carne',removed:['Rice'],added:['Jacket potato']},Tuesday:{meal:'Eating out — The pub'},Wednesday:{meal:'Chicken Fajitas',added:['Extra peppers']},Thursday:{meal:'Leftovers — Fajitas'},Friday:{meal:'Homemade Pizza',removed:['Mushrooms'],added:['Pepperoni','Olives'],extras:['Garlic bread','Coleslaw']},Saturday:{meal:'Fish & Chips'},Sunday:{meal:'Roast Beef',extras:['Yorkshire puddings']}};
+    return `<div class="history-example-note"><strong>Example history</strong><span>This is just a preview of how multiple weeks will look. Your real weeks will replace it once you have history.</span></div>${exampleWeek('Last week · example',weekOne)}${exampleWeek('2 weeks ago · example',weekTwo)}`;
   }
   function renderHistory(){const items=history().slice(0,4);historyWeeks.innerHTML=items.length?items.map((wk,i)=>`<section class="history-week"><div class="history-week-head"><div><strong>${i===0?'Last week':`${i+1} weeks ago`}</strong></div><button type="button" class="secondary history-copy" data-copy-history="${i}">Copy week</button></div>${DAYS.map(day=>historyDay(day,wk.schedule,wk.dayIngredients)).join('')}</section>`).join(''):`<p class="muted">Your completed weeks will appear here.</p>${exampleHistory()}`}
   function copyWeek(index){const wk=history()[index];if(!wk)return;state.schedule=clone(wk.schedule||emptyDayMap());state.dayIngredients=clone(wk.dayIngredients||emptyDayMap());state.extras=clone(wk.extras||[]);state.dayChecks={};historyDialog.close();render();toast('Week copied')}
