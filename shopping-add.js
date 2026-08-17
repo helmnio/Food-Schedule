@@ -12,11 +12,14 @@
     const counts = usage();
     counts[name] = (counts[name] || 0) + 1;
     localStorage.setItem(USAGE_KEY, JSON.stringify(counts));
+    if (!state.previousItems.some(item => item.toLowerCase() === name.toLowerCase())) state.previousItems.push(name);
   }
+
+  function extraNames(){return new Set((state.extras||[]).map(item=>(typeof item==='string'?item:item.name||'').toLowerCase()))}
 
   function quickItems() {
     const counts = usage();
-    const inList = new Set(state.shopping.map(item => item.name.toLowerCase()));
+    const inList = new Set([...state.shopping.map(item => item.name.toLowerCase()), ...extraNames()]);
     const known = unique([...(state.previousItems || []), ...Object.keys(counts)]).filter(name => !inList.has(name.toLowerCase()));
     return known.sort((a, b) => (counts[b] || 0) - (counts[a] || 0) || a.localeCompare(b)).slice(0, 5);
   }
@@ -43,43 +46,40 @@
     shopSuggestions.hidden = true;
   }
 
+  function addAsExtra(raw){
+    const name=cleanName(raw||'');
+    if(!name)return;
+    recordItem(name);
+    if(!extraNames().has(name.toLowerCase())) state.extras.push({name,type:''});
+    save();render();closeShoppingAdd();toast('Item added');
+  }
+
   addShopBtn.addEventListener('click', event => {
     event.preventDefault();
     event.stopImmediatePropagation();
     openShoppingAdd();
   }, true);
 
-  shoppingPopupAddBtn.addEventListener('click', () => {
-    const value = customShopInput.value;
-    if (!value.trim()) return;
-    recordItem(value);
-    addShopping(value);
-    closeShoppingAdd();
-  });
+  shoppingPopupAddBtn.addEventListener('click', () => addAsExtra(customShopInput.value));
 
   customShopInput.addEventListener('keydown', event => {
     if (event.key !== 'Enter') return;
     event.preventDefault();
-    if (!customShopInput.value.trim()) return;
-    recordItem(customShopInput.value);
-    addShopping(customShopInput.value);
-    closeShoppingAdd();
+    addAsExtra(customShopInput.value);
   });
 
   document.addEventListener('click', event => {
     const quick = event.target.closest('[data-quick-shop]');
     if (quick) {
-      const name = quick.dataset.quickShop;
-      recordItem(name);
-      addShopping(name);
-      closeShoppingAdd();
+      addAsExtra(quick.dataset.quickShop);
       return;
     }
 
     const suggestion = event.target.closest('[data-shop-suggestion]');
     if (suggestion && shoppingAddDialog.open) {
-      recordItem(suggestion.dataset.shopSuggestion);
-      setTimeout(closeShoppingAdd, 0);
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      addAsExtra(suggestion.dataset.shopSuggestion);
     }
   }, true);
 
