@@ -8,12 +8,39 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=3">
   <link rel="icon" type="image/png" href="apple-touch-icon.png?v=3">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dishes-page.css">
 </head>
 <body>
   <header class="topbar"><div><span class="eyebrow">FOOD SCHEDULE</span><h1>Plan food. Buy what you need.</h1></div></header>
   <main>
     <section id="week" class="view active"><div class="section-head"><div><span class="eyebrow">THIS WEEK</span><h2>Your food schedule</h2></div></div><div id="weekGrid" class="week-grid"></div><div class="panel compact"><h3>Weekly extras</h3><p class="muted">Snacks and drinks that do not need a particular day.</p><div class="inline-form"><input id="extraInput" placeholder="e.g. Crisps, orange juice"><select id="extraType"><option>Snack</option><option>Drink</option></select><button id="addExtraBtn">Add</button></div><div id="extrasList" class="chips"></div></div></section>
-    <section id="dishes" class="view"><div class="section-head"><div><span class="eyebrow">DISH LIBRARY</span><h2>Build your dishes</h2></div><button id="newDishBtn">+ New dish</button></div><input id="dishSearch" class="search" placeholder="Search dishes or ingredients…"><div id="dishGrid" class="dish-grid"></div></section>
+
+    <section id="dishes" class="view">
+      <div class="section-head"><div><span class="eyebrow">DISHES</span><h2>Your food notebook</h2></div><button id="newDishBtn">+ New dish</button></div>
+      <div class="dish-library-intro"><p class="muted">Keep your regular meals close, build your own dishes and use the full catalogue when you need inspiration.</p></div>
+
+      <section class="dish-library-section">
+        <div class="dish-section-head"><div><h3>Favourites</h3><p class="muted">Your regular go-to meals.</p></div></div>
+        <div id="favouriteDishGrid" class="dish-grid"></div>
+      </section>
+
+      <section class="dish-library-section">
+        <div class="dish-section-head"><div><h3>My dishes</h3><p class="muted">Dishes you've created or made your own.</p></div></div>
+        <div id="personalDishGrid" class="dish-grid"></div>
+      </section>
+
+      <section class="dish-library-section dish-search-wrap">
+        <div class="dish-section-head"><div><h3>Find a dish</h3><p class="muted">Search your dishes and the full meal catalogue.</p></div></div>
+        <input id="dishSearch" class="search" placeholder="Search dishes or ingredients…" autocomplete="off">
+        <div id="dishGrid" class="dish-grid"></div>
+      </section>
+
+      <section class="dish-library-section">
+        <div class="dish-section-head"><div><h3>This week's ideas</h3><p class="muted">Four different catalogue dishes to try each week.</p></div></div>
+        <div id="suggestedDishGrid" class="dish-grid"></div>
+      </section>
+    </section>
+
     <section id="shopping" class="view"><div class="section-head"><div><span class="eyebrow">LIST</span><h2>Your shopping list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div><p class="muted">This list updates automatically when you change your week or edit a dish.</p><div class="shopping-toolbar"><div class="item-combobox"><input id="customShopInput" placeholder="Add ingredient, previous item or something new…" autocomplete="off"><div id="shopSuggestions" class="suggestions" hidden></div></div><button id="addShopBtn">Add item</button></div><div class="view-toggle" role="group" aria-label="Shopping list view"><button class="toggle-btn active" data-shop-view="list">List</button><button class="toggle-btn" data-shop-view="meals">By meal</button></div><div id="shoppingList" class="shopping-list"></div></section>
   </main>
   <nav class="tabs bottom-nav" aria-label="App sections"><button class="tab active" data-view="week">Week</button><button class="tab" data-view="dishes">Dishes</button><button class="tab" data-view="shopping">List</button></nav>
@@ -32,6 +59,7 @@
 
   <div id="toast" class="toast" hidden></div>
   <script src="app.js"></script>
+  <script src="dishes-page.js"></script>
   <script src="mealdb.js"></script>
   <script>
     let editingPlan=null;
