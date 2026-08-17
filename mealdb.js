@@ -1,7 +1,7 @@
 (() => {
   const API = 'https://www.themealdb.com/api/json/v1/1';
   const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  const REFRESH_AFTER = 7 * 24 * 60 * 60 * 1000;
+  const REFRESH_AFTER = 365 * 24 * 60 * 60 * 1000;
   const META_KEY = 'food-schedule-mealdb-meta-v1';
 
   function mealIngredients(meal) {
@@ -32,7 +32,6 @@
 
   async function fetchMeals() {
     const meals = [];
-    // Small batches avoid hammering the free API while still loading quickly.
     for (let start = 0; start < LETTERS.length; start += 5) {
       const batch = LETTERS.slice(start, start + 5);
       const results = await Promise.all(
