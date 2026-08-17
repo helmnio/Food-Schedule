@@ -39,7 +39,17 @@
     <section id="shopping" class="view">
       <div class="section-head"><div><span class="eyebrow">SHOPPING</span><h2>Your list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div>
       <p class="muted">This list updates automatically when you change your week or edit a dish.</p>
-      <div class="inline-form"><input id="customShopInput" placeholder="Add anything else…"><button id="addShopBtn">Add item</button></div>
+      <div class="shopping-toolbar">
+        <div class="item-combobox">
+          <input id="customShopInput" placeholder="Add ingredient, previous item or something new…" autocomplete="off">
+          <div id="shopSuggestions" class="suggestions" hidden></div>
+        </div>
+        <button id="addShopBtn">Add item</button>
+      </div>
+      <div class="view-toggle" role="group" aria-label="Shopping list view">
+        <button class="toggle-btn active" data-shop-view="list">List</button>
+        <button class="toggle-btn" data-shop-view="meals">By meal</button>
+      </div>
       <div id="shoppingList" class="shopping-list"></div>
     </section>
   </main>
@@ -48,20 +58,12 @@
     <form method="dialog" id="dishForm">
       <div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button value="cancel" class="icon-btn" aria-label="Close">×</button></div>
       <label>Dish name<input id="dishName" required></label>
-
       <div class="ingredient-editor">
-        <div class="ingredient-editor-head">
-          <div><strong>Ingredients</strong><p class="muted">Tick what belongs in this dish.</p></div>
-          <span id="ingredientCount" class="count-pill"></span>
-        </div>
+        <div class="ingredient-editor-head"><div><strong>Ingredients</strong><p class="muted">Tick what belongs in this dish.</p></div><span id="ingredientCount" class="count-pill"></span></div>
         <input id="ingredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off">
         <div id="ingredientPicker" class="ingredient-picker"></div>
-        <div class="custom-ingredient-row">
-          <input id="customIngredientInput" placeholder="Ingredient not listed? Add it here…" autocomplete="off">
-          <button type="button" id="addCustomIngredientBtn" class="secondary">+ Add ingredient</button>
-        </div>
+        <div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Ingredient not listed? Add it here…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add ingredient</button></div>
       </div>
-
       <label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label>
       <div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button value="cancel" class="secondary">Cancel</button><button type="submit" value="default">Save dish</button></div>
     </form>
@@ -71,7 +73,12 @@
     <form method="dialog" id="slotForm">
       <div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button value="cancel" class="icon-btn">×</button></div>
       <label>Type<select id="slotType"><option value="dish">Dish</option><option value="leftovers">Leftovers</option><option value="takeaway">Takeaway</option><option value="eating-out">Eating out</option><option value="custom">Custom</option></select></label>
-      <label id="slotDishWrap">Dish<select id="slotDish"></select></label>
+      <div id="slotDishWrap" class="slot-dish-wrap">
+        <label>Dish</label>
+        <input id="slotDishSearch" placeholder="Search dishes…" autocomplete="off">
+        <div id="slotDishResults" class="dish-results"></div>
+        <input id="slotDish" type="hidden">
+      </div>
       <label id="slotLabelWrap" hidden>Label<input id="slotLabel" placeholder="e.g. Freezer meal"></label>
       <div class="dialog-actions"><span></span><span></span><button value="cancel" class="secondary">Cancel</button><button type="submit">Add</button></div>
     </form>
