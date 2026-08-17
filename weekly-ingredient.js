@@ -5,7 +5,7 @@
     const items = (state.dayIngredients[day] || []).map((name, index) =>
       `<span class="day-extra-chip">${esc(name)}<button type="button" data-remove-day-ingredient="${day}|${index}">×</button></span>`
     ).join('');
-    return `<div class="day-extras"><div class="day-extra-list">${items}</div><button type="button" class="add-slot day-ingredient-open" data-open-day-ingredient="${day}">+ Add ingredient</button></div>`;
+    return `<div class="day-extras"><div class="day-extra-list">${items}</div><button type="button" class="add-slot day-ingredient-open" data-open-day-ingredient="${day}">+ Add item</button></div>`;
   };
 
   function closeIngredientDialog() {
@@ -35,7 +35,7 @@
     const open = event.target.closest('[data-open-day-ingredient]');
     if (open) {
       ingredientDay = open.dataset.openDayIngredient;
-      dayIngredientDialogTitle.textContent = `Add ingredient to ${ingredientDay}`;
+      dayIngredientDialogTitle.textContent = `Add item to ${ingredientDay}`;
       dayIngredientSearch.value = '';
       renderIngredientResults();
       dayIngredientDialog.showModal();
