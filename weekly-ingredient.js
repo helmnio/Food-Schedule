@@ -56,10 +56,9 @@
     const known = unique([...allIngredients(), ...(state.previousItems || []), ...Object.keys(counts)]);
     const matches = known.filter(name => !selected.has(name.toLowerCase()) && name.toLowerCase().includes(q)).slice(0, 20);
     const clean = cleanName(dayIngredientSearch.value);
-    const exact = matches.some(name => name.toLowerCase() === clean.toLowerCase()) || selected.has(clean.toLowerCase());
     dayIngredientResults.innerHTML = [
       ...matches.map(name => `<button type="button" class="dish-result" data-day-ingredient-pick="${esc(name)}"><span>${esc(name)}</span></button>`),
-      ...(!exact && clean ? [`<button type="button" class="dish-result" data-day-ingredient-pick="${esc(clean)}"><span>+ Add “${esc(clean)}”</span><small>New item</small></button>`] : [])
+      ...(clean ? [`<button type="button" class="dish-result custom-add-result" data-day-ingredient-pick="${esc(clean)}"><span>+ Add “${esc(clean)}”</span><small>Custom</small></button>`] : [])
     ].join('') || '<p class="muted ingredient-empty">No matching items.</p>';
   }
 
