@@ -8,91 +8,24 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
-    <div><span class="eyebrow">FOOD SCHEDULE</span><h1>Plan food. Buy what you need.</h1></div>
-  </header>
-
+  <header class="topbar"><div><span class="eyebrow">FOOD SCHEDULE</span><h1>Plan food. Buy what you need.</h1></div></header>
   <main>
-    <section id="week" class="view active">
-      <div class="section-head"><div><span class="eyebrow">THIS WEEK</span><h2>Your food schedule</h2></div></div>
-      <div id="weekGrid" class="week-grid"></div>
-      <div class="panel compact">
-        <h3>Weekly extras</h3><p class="muted">Snacks and drinks that do not need a particular day.</p>
-        <div class="inline-form"><input id="extraInput" placeholder="e.g. Crisps, orange juice"><select id="extraType"><option>Snack</option><option>Drink</option></select><button id="addExtraBtn">Add</button></div>
-        <div id="extrasList" class="chips"></div>
-      </div>
-    </section>
-
-    <section id="dishes" class="view">
-      <div class="section-head"><div><span class="eyebrow">DISH LIBRARY</span><h2>Build your dishes</h2></div><button id="newDishBtn">+ New dish</button></div>
-      <input id="dishSearch" class="search" placeholder="Search dishes or ingredients…"><div id="dishGrid" class="dish-grid"></div>
-    </section>
-
-    <section id="shopping" class="view">
-      <div class="section-head"><div><span class="eyebrow">LIST</span><h2>Your shopping list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div>
-      <p class="muted">This list updates automatically when you change your week or edit a dish.</p>
-      <div class="shopping-toolbar"><div class="item-combobox"><input id="customShopInput" placeholder="Add ingredient, previous item or something new…" autocomplete="off"><div id="shopSuggestions" class="suggestions" hidden></div></div><button id="addShopBtn">Add item</button></div>
-      <div class="view-toggle" role="group" aria-label="Shopping list view"><button class="toggle-btn active" data-shop-view="list">List</button><button class="toggle-btn" data-shop-view="meals">By meal</button></div>
-      <div id="shoppingList" class="shopping-list"></div>
-    </section>
+    <section id="week" class="view active"><div class="section-head"><div><span class="eyebrow">THIS WEEK</span><h2>Your food schedule</h2></div></div><div id="weekGrid" class="week-grid"></div><div class="panel compact"><h3>Weekly extras</h3><p class="muted">Snacks and drinks that do not need a particular day.</p><div class="inline-form"><input id="extraInput" placeholder="e.g. Crisps, orange juice"><select id="extraType"><option>Snack</option><option>Drink</option></select><button id="addExtraBtn">Add</button></div><div id="extrasList" class="chips"></div></div></section>
+    <section id="dishes" class="view"><div class="section-head"><div><span class="eyebrow">DISH LIBRARY</span><h2>Build your dishes</h2></div><button id="newDishBtn">+ New dish</button></div><input id="dishSearch" class="search" placeholder="Search dishes or ingredients…"><div id="dishGrid" class="dish-grid"></div></section>
+    <section id="shopping" class="view"><div class="section-head"><div><span class="eyebrow">LIST</span><h2>Your shopping list</h2></div><button id="clearCheckedBtn" class="secondary">Clear checked</button></div><p class="muted">This list updates automatically when you change your week or edit a dish.</p><div class="shopping-toolbar"><div class="item-combobox"><input id="customShopInput" placeholder="Add ingredient, previous item or something new…" autocomplete="off"><div id="shopSuggestions" class="suggestions" hidden></div></div><button id="addShopBtn">Add item</button></div><div class="view-toggle" role="group" aria-label="Shopping list view"><button class="toggle-btn active" data-shop-view="list">List</button><button class="toggle-btn" data-shop-view="meals">By meal</button></div><div id="shoppingList" class="shopping-list"></div></section>
   </main>
+  <nav class="tabs bottom-nav" aria-label="App sections"><button class="tab active" data-view="week">Week</button><button class="tab" data-view="dishes">Dishes</button><button class="tab" data-view="shopping">List</button></nav>
 
-  <nav class="tabs bottom-nav" aria-label="App sections">
-    <button class="tab active" data-view="week">Week</button>
-    <button class="tab" data-view="dishes">Dishes</button>
-    <button class="tab" data-view="shopping">List</button>
-  </nav>
+  <dialog id="dishDialog"><form id="dishForm"><div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button type="button" id="closeDishDialog" class="icon-btn" aria-label="Close">×</button></div><label>Dish name<input id="dishName" required></label><div class="ingredient-editor"><div class="ingredient-editor-head"><div><strong>Ingredients</strong><p class="muted">These are the ingredients currently in this dish. Untick one to remove it.</p></div><span id="ingredientCount" class="count-pill"></span></div><div id="selectedIngredientPicker" class="ingredient-picker selected-ingredients"></div><div class="ingredient-add-section"><strong>Add ingredient</strong><p class="muted">Search to add an existing ingredient, or create a custom one.</p><input id="ingredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off"><div id="ingredientPicker" class="ingredient-picker" hidden></div><div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add custom</button></div></div></div><label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label><div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button type="button" id="cancelDishBtn" class="secondary">Cancel</button><button type="submit">Save dish</button></div></form></dialog>
 
-  <dialog id="dishDialog">
-    <form id="dishForm">
-      <div class="dialog-head"><h2 id="dishDialogTitle">Edit dish</h2><button type="button" id="closeDishDialog" class="icon-btn" aria-label="Close">×</button></div>
-      <label>Dish name<input id="dishName" required></label>
-      <div class="ingredient-editor">
-        <div class="ingredient-editor-head"><div><strong>Ingredients</strong><p class="muted">These are the ingredients currently in this dish. Untick one to remove it.</p></div><span id="ingredientCount" class="count-pill"></span></div>
-        <div id="selectedIngredientPicker" class="ingredient-picker selected-ingredients"></div>
-        <div class="ingredient-add-section">
-          <strong>Add ingredient</strong>
-          <p class="muted">Search to add an existing ingredient, or create a custom one.</p>
-          <input id="ingredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off">
-          <div id="ingredientPicker" class="ingredient-picker" hidden></div>
-          <div class="custom-ingredient-row"><input id="customIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addCustomIngredientBtn" class="secondary">+ Add custom</button></div>
-        </div>
-      </div>
-      <label class="check"><input id="dishFavourite" type="checkbox"> Favourite</label>
-      <div class="dialog-actions"><button type="button" id="deleteDishBtn" class="danger">Delete</button><span></span><button type="button" id="cancelDishBtn" class="secondary">Cancel</button><button type="submit">Save dish</button></div>
-    </form>
-  </dialog>
+  <dialog id="mealEditDialog"><form id="mealEditForm"><div class="dialog-head"><div><span class="eyebrow">THIS WEEK ONLY</span><h2 id="mealEditTitle">Edit meal</h2></div><button type="button" id="closeMealEditDialog" class="icon-btn">×</button></div><p class="muted">Change the ingredients for this scheduled meal only. The saved dish will not be changed.</p><div class="ingredient-editor"><div class="ingredient-editor-head"><div><strong>Ingredients for this meal</strong><p class="muted">Untick anything you do not need this time.</p></div><span id="mealIngredientCount" class="count-pill"></span></div><div id="mealSelectedIngredients" class="ingredient-picker selected-ingredients"></div><div class="ingredient-add-section"><strong>Add ingredient</strong><p class="muted">Search the ingredient library or add something custom.</p><input id="mealIngredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off"><div id="mealIngredientPicker" class="ingredient-picker" hidden></div><div class="custom-ingredient-row"><input id="mealCustomIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addMealCustomIngredientBtn" class="secondary">+ Add custom</button></div></div></div><div class="dialog-actions"><button type="button" id="resetMealIngredientsBtn" class="secondary">Reset to dish</button><span></span><button type="button" id="cancelMealEditBtn" class="secondary">Cancel</button><button type="submit">Save this meal</button></div></form></dialog>
 
-  <dialog id="mealEditDialog">
-    <form id="mealEditForm">
-      <div class="dialog-head"><div><span class="eyebrow">THIS WEEK ONLY</span><h2 id="mealEditTitle">Edit meal</h2></div><button type="button" id="closeMealEditDialog" class="icon-btn" aria-label="Close">×</button></div>
-      <p class="muted">Change the ingredients for this scheduled meal only. The saved dish will not be changed.</p>
-      <div class="ingredient-editor">
-        <div class="ingredient-editor-head"><div><strong>Ingredients for this meal</strong><p class="muted">Untick anything you do not need this time.</p></div><span id="mealIngredientCount" class="count-pill"></span></div>
-        <div id="mealSelectedIngredients" class="ingredient-picker selected-ingredients"></div>
-        <div class="ingredient-add-section">
-          <strong>Add ingredient</strong>
-          <p class="muted">Search the ingredient library or add something custom.</p>
-          <input id="mealIngredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off">
-          <div id="mealIngredientPicker" class="ingredient-picker" hidden></div>
-          <div class="custom-ingredient-row"><input id="mealCustomIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addMealCustomIngredientBtn" class="secondary">+ Add custom</button></div>
-        </div>
-      </div>
-      <div class="dialog-actions"><button type="button" id="resetMealIngredientsBtn" class="secondary">Reset to dish</button><span></span><button type="button" id="cancelMealEditBtn" class="secondary">Cancel</button><button type="submit">Save this meal</button></div>
-    </form>
-  </dialog>
+  <dialog id="switchMealDialog"><form id="switchMealForm"><div class="dialog-head"><div><span class="eyebrow">MOVE MEAL</span><h2 id="switchMealTitle">Switch day</h2></div><button type="button" id="closeSwitchMealDialog" class="icon-btn">×</button></div><p class="muted">Choose a new day. Existing meals on that day will stay there.</p><div id="switchDayOptions" class="day-choice-grid"></div><div class="dialog-actions simple"><span></span><span></span><button type="button" id="cancelSwitchMealBtn" class="secondary">Cancel</button><button type="submit">Move meal</button></div></form></dialog>
 
-  <dialog id="slotDialog">
-    <form id="slotForm">
-      <div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button type="button" id="closeSlotDialog" class="icon-btn" aria-label="Close">×</button></div>
-      <label>Type<select id="slotType"><option value="dish">Dish</option><option value="leftovers">Leftovers</option><option value="takeaway">Takeaway</option><option value="eating-out">Eating out</option><option value="custom">Custom</option></select></label>
-      <div id="slotDishWrap" class="slot-dish-wrap"><label>Dish</label><input id="slotDishSearch" placeholder="Type to search dishes…" autocomplete="off"><div id="slotDishResults" class="dish-results"><p class="muted ingredient-empty">Start typing to filter dishes.</p></div><input id="slotDish" type="hidden"></div>
-      <label id="slotLabelWrap" hidden>Label<input id="slotLabel" placeholder="e.g. Freezer meal"></label>
-      <div class="dialog-actions"><span></span><span></span><button type="button" id="cancelSlotBtn" class="secondary">Cancel</button><button type="submit">Add</button></div>
-    </form>
-  </dialog>
+  <dialog id="deleteMealDialog"><form id="deleteMealForm"><div class="dialog-head"><div><span class="eyebrow">REMOVE MEAL</span><h2 id="deleteMealTitle">Delete meal?</h2></div><button type="button" id="closeDeleteMealDialog" class="icon-btn">×</button></div><p class="muted">This removes only this scheduled meal from the week. The saved dish stays in your library.</p><div class="dialog-actions simple"><span></span><span></span><button type="button" id="cancelDeleteMealBtn" class="secondary">Cancel</button><button type="submit" class="danger-solid">Delete meal</button></div></form></dialog>
 
-  <div id="toast" class="toast" hidden></div>
-  <script src="app.js"></script>
+  <dialog id="slotDialog"><form id="slotForm"><div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button type="button" id="closeSlotDialog" class="icon-btn">×</button></div><label>Type<select id="slotType"><option value="dish">Dish</option><option value="leftovers">Leftovers</option><option value="takeaway">Takeaway</option><option value="eating-out">Eating out</option><option value="custom">Custom</option></select></label><div id="slotDishWrap" class="slot-dish-wrap"><label>Dish</label><input id="slotDishSearch" placeholder="Type to search dishes…" autocomplete="off"><div id="slotDishResults" class="dish-results"><p class="muted ingredient-empty">Start typing to filter dishes.</p></div><input id="slotDish" type="hidden"></div><label id="slotLabelWrap" hidden>Label<input id="slotLabel" placeholder="e.g. Freezer meal"></label><div class="dialog-actions"><span></span><span></span><button type="button" id="cancelSlotBtn" class="secondary">Cancel</button><button type="submit">Add</button></div></form></dialog>
+
+  <div id="toast" class="toast" hidden></div><script src="app.js"></script>
 </body>
 </html>
