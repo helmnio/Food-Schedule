@@ -63,6 +63,25 @@
     </form>
   </dialog>
 
+  <dialog id="mealEditDialog">
+    <form id="mealEditForm">
+      <div class="dialog-head"><div><span class="eyebrow">THIS WEEK ONLY</span><h2 id="mealEditTitle">Edit meal</h2></div><button type="button" id="closeMealEditDialog" class="icon-btn" aria-label="Close">×</button></div>
+      <p class="muted">Change the ingredients for this scheduled meal only. The saved dish will not be changed.</p>
+      <div class="ingredient-editor">
+        <div class="ingredient-editor-head"><div><strong>Ingredients for this meal</strong><p class="muted">Untick anything you do not need this time.</p></div><span id="mealIngredientCount" class="count-pill"></span></div>
+        <div id="mealSelectedIngredients" class="ingredient-picker selected-ingredients"></div>
+        <div class="ingredient-add-section">
+          <strong>Add ingredient</strong>
+          <p class="muted">Search the ingredient library or add something custom.</p>
+          <input id="mealIngredientSearch" class="search" placeholder="Search ingredients…" autocomplete="off">
+          <div id="mealIngredientPicker" class="ingredient-picker" hidden></div>
+          <div class="custom-ingredient-row"><input id="mealCustomIngredientInput" placeholder="Add custom ingredient…" autocomplete="off"><button type="button" id="addMealCustomIngredientBtn" class="secondary">+ Add custom</button></div>
+        </div>
+      </div>
+      <div class="dialog-actions"><button type="button" id="resetMealIngredientsBtn" class="secondary">Reset to dish</button><span></span><button type="button" id="cancelMealEditBtn" class="secondary">Cancel</button><button type="submit">Save this meal</button></div>
+    </form>
+  </dialog>
+
   <dialog id="slotDialog">
     <form id="slotForm">
       <div class="dialog-head"><h2 id="slotTitle">Add to Monday</h2><button type="button" id="closeSlotDialog" class="icon-btn" aria-label="Close">×</button></div>
