@@ -16,8 +16,34 @@
   function renderQuick(){const meals=quickMeals();quickMealPills.innerHTML=meals.length?meals.map(d=>`<button type="button" class="quick-meal-pill" data-quick-dish="${d.id}">${d.favourite?'<span class="quick-heart">♥</span>':''}<span>${esc(d.name)}</span></button>`).join(''):'<span class="muted">Favourite or recently used meals will appear here.</span>'}
   function openQuick(day){quickDay=day;quickMealTitle.textContent=`Add meal to ${day}`;quickMealSearch.value='';renderQuick();quickMealSearchResults.innerHTML='';quickMealDialog.showModal()}
   function addQuick(id){if(!quickDay)return;state.schedule[quickDay].push({type:'dish',dishId:id});quickMealDialog.close();quickDay=null;render();toast('Meal added')}
-  function exampleHistory(){const meals={Monday:'Chicken Fajitas',Tuesday:'Spaghetti Bolognese',Wednesday:'Leftovers',Thursday:'Chicken Curry',Friday:'Takeaway',Saturday:'Burgers',Sunday:'Roast Chicken'};return `<div class="history-example-note"><strong>Example week</strong><span>This is just a preview. Your real weeks will appear here once you have history.</span></div><section class="history-week history-week-example"><div class="history-week-head"><div><strong>Example</strong></div><span class="count-pill">PREVIEW</span></div>${DAYS.map(day=>`<div class="history-day"><span>${day.slice(0,3)}</span><strong>${meals[day]}</strong></div>`).join('')}</section>`}
-  function renderHistory(){const items=history().slice(0,4);historyWeeks.innerHTML=items.length?items.map((wk,i)=>`<section class="history-week"><div class="history-week-head"><div><strong>${i===0?'Last week':`${i+1} weeks ago`}</strong></div><button type="button" class="secondary history-copy" data-copy-history="${i}">Copy week</button></div>${DAYS.map(day=>{const meals=(wk.schedule?.[day]||[]).map(dishName);return meals.length?`<div class="history-day"><span>${day.slice(0,3)}</span><strong>${meals.map(esc).join(' · ')}</strong></div>`:''}).join('')}</section>`).join(''):`<p class="muted">Your completed weeks will appear here.</p>${exampleHistory()}`}
+
+  function mealChanges(slot){
+    if(slot.type!=='dish'||!slot.ingredients)return {removed:[],added:[]};
+    const dish=state.dishes.find(d=>d.id===slot.dishId);
+    if(!dish)return {removed:[],added:[]};
+    const base=dish.ingredients||[],used=slot.ingredients||[];
+    return {removed:base.filter(i=>!used.includes(i)),added:used.filter(i=>!base.includes(i))};
+  }
+  function detailLine(label,items){return items?.length?`<div class="history-detail"><span>${label}:</span> ${items.map(esc).join(', ')}</div>`:''}
+  function historyDay(day,schedule,dayIngredients){
+    const slots=schedule?.[day]||[],extras=dayIngredients?.[day]||[];
+    if(!slots.length&&!extras.length)return '';
+    const meals=slots.map(slot=>{const changes=mealChanges(slot);return `<div class="history-meal"><strong>${esc(dishName(slot))}</strong>${detailLine('Removed',changes.removed)}${detailLine('Added',changes.added)}</div>`}).join('');
+    return `<div class="history-day"><span>${day.slice(0,3)}</span><div class="history-day-content">${meals}${detailLine('Day extras',extras)}</div></div>`;
+  }
+  function exampleHistory(){
+    const example={
+      Monday:{meal:'Chicken Curry',removed:['Rice','Peas'],added:['Chips','Spinach'],extras:['Naan','Mango chutney']},
+      Tuesday:{meal:'Spaghetti Bolognese',added:['Garlic bread']},
+      Wednesday:{meal:'Leftovers — Chicken Curry',extras:['Salad']},
+      Thursday:{meal:'Homemade Tacos',removed:['Sour cream','Jalapeños'],added:['Guacamole','Cheese']},
+      Friday:{meal:'Takeaway — Chinese'},
+      Saturday:{meal:'Steak & Chips',extras:['Peppercorn sauce','Onion rings']},
+      Sunday:{meal:'Roast Chicken'}
+    };
+    return `<div class="history-example-note"><strong>Example week</strong><span>This is just a preview. Your real weeks will appear here once you have history.</span></div><section class="history-week history-week-example"><div class="history-week-head"><div><strong>Example</strong></div><span class="count-pill">PREVIEW</span></div>${DAYS.map(day=>{const x=example[day];return `<div class="history-day"><span>${day.slice(0,3)}</span><div class="history-day-content"><div class="history-meal"><strong>${esc(x.meal)}</strong>${detailLine('Removed',x.removed)}${detailLine('Added',x.added)}</div>${detailLine('Day extras',x.extras)}</div></div>`}).join('')}</section>`;
+  }
+  function renderHistory(){const items=history().slice(0,4);historyWeeks.innerHTML=items.length?items.map((wk,i)=>`<section class="history-week"><div class="history-week-head"><div><strong>${i===0?'Last week':`${i+1} weeks ago`}</strong></div><button type="button" class="secondary history-copy" data-copy-history="${i}">Copy week</button></div>${DAYS.map(day=>historyDay(day,wk.schedule,wk.dayIngredients)).join('')}</section>`).join(''):`<p class="muted">Your completed weeks will appear here.</p>${exampleHistory()}`}
   function copyWeek(index){const wk=history()[index];if(!wk)return;state.schedule=clone(wk.schedule||emptyDayMap());state.dayIngredients=clone(wk.dayIngredients||emptyDayMap());state.extras=clone(wk.extras||[]);state.dayChecks={};historyDialog.close();render();toast('Week copied')}
 
   document.addEventListener('click',e=>{const add=e.target.closest('[data-day]');if(add){e.preventDefault();e.stopImmediatePropagation();openQuick(add.dataset.day);return}const q=e.target.closest('[data-quick-dish]');if(q){addQuick(q.dataset.quickDish);return}const copy=e.target.closest('[data-copy-history]');if(copy)copyWeek(Number(copy.dataset.copyHistory))},true);
