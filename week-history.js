@@ -5,11 +5,16 @@
 
   function weekStart(date=new Date()){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const day=d.getDay()||7;d.setDate(d.getDate()-day+1);return d}
   function weekKey(date=new Date()){const d=weekStart(date);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+  function nextWeekKey(date=new Date()){const d=weekStart(date);d.setDate(d.getDate()+7);return weekKey(d)}
   function clone(v){return JSON.parse(JSON.stringify(v))}
   function history(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{return[]}}
   function saveHistory(items){localStorage.setItem(HISTORY_KEY,JSON.stringify(items.slice(0,26)))}
   function snapshot(key){return {key,schedule:clone(state.schedule),dayIngredients:clone(state.dayIngredients),extras:clone(state.extras),savedAt:Date.now()}}
-  function ensureWeek(){const current=weekKey(),stored=localStorage.getItem(WEEK_KEY);if(!stored){localStorage.setItem(WEEK_KEY,current);return}if(stored===current)return;const items=history();if(DAYS.some(day=>(state.schedule[day]||[]).length||(state.dayIngredients[day]||[]).length)||state.extras.length){items.unshift(snapshot(stored));saveHistory(items)}state.schedule=emptyDayMap();state.dayIngredients=emptyDayMap();state.dayChecks={};state.extras=[];localStorage.setItem(WEEK_KEY,current);render()}
+  function hasWeekContent(){return DAYS.some(day=>(state.schedule[day]||[]).length||(state.dayIngredients[day]||[]).length)||state.extras.length}
+  function archiveCurrentWeek(key){if(!hasWeekContent())return;const items=history();items.unshift(snapshot(key));saveHistory(items)}
+  function resetWeek(){state.schedule=emptyDayMap();state.dayIngredients=emptyDayMap();state.dayChecks={};state.extras=[];state.shopping=[]}
+  function ensureWeek(){const current=weekKey(),next=nextWeekKey(),stored=localStorage.getItem(WEEK_KEY);if(!stored){localStorage.setItem(WEEK_KEY,current);return}if(stored===current||stored===next)return;archiveCurrentWeek(stored);resetWeek();localStorage.setItem(WEEK_KEY,current);render()}
+  function startNextWeek(){const current=weekKey(),next=nextWeekKey(),stored=localStorage.getItem(WEEK_KEY)||current;if(stored===next){startNextWeekDialog.close();toast('Next week is already started');return}archiveCurrentWeek(stored);resetWeek();localStorage.setItem(WEEK_KEY,next);startNextWeekDialog.close();render();toast('Next week started')}
   function dishName(slot){if(slot.type==='dish')return state.dishes.find(d=>d.id===slot.dishId)?.name||'Meal';return slot.label||slot.type.replace('-',' ')}
   function recentDishIds(){const seen=[];for(const wk of history())for(const day of DAYS)for(const slot of wk.schedule?.[day]||[])if(slot.type==='dish'&&!seen.includes(slot.dishId))seen.push(slot.dishId);return seen}
   function quickMeals(){const scheduled=new Set(DAYS.flatMap(day=>(state.schedule[day]||[]).filter(s=>s.type==='dish').map(s=>s.dishId)));const recent=recentDishIds();return [...state.dishes].filter(d=>!scheduled.has(d.id)).sort((a,b)=>{if(Number(a.favourite)!==Number(b.favourite))return Number(b.favourite)-Number(a.favourite);const ai=recent.indexOf(a.id),bi=recent.indexOf(b.id);const ar=ai<0?999:ai,br=bi<0?999:bi;return br-ar||a.name.localeCompare(b.name)}).slice(0,5)}
@@ -44,5 +49,8 @@
   quickMealSearch.addEventListener('input',()=>{const q=quickMealSearch.value.trim().toLowerCase();if(!q){quickMealSearchResults.innerHTML='';return}const results=state.dishes.filter(d=>d.name.toLowerCase().includes(q)||(d.ingredients||[]).some(i=>i.toLowerCase().includes(q))).sort((a,b)=>Number(b.favourite)-Number(a.favourite)||a.name.localeCompare(b.name)).slice(0,20);quickMealSearchResults.innerHTML=results.map(d=>`<button type="button" class="dish-result" data-quick-dish="${d.id}"><span>${d.favourite?'♥ ':''}${esc(d.name)}</span></button>`).join('')||'<p class="muted ingredient-empty">No matching meals.</p>'});
   closeQuickMealDialog.onclick=cancelQuickMealBtn.onclick=()=>{quickMealDialog.close();quickDay=null};
   viewHistoryBtn.onclick=()=>{renderHistory();historyDialog.showModal()};closeHistoryDialog.onclick=()=>historyDialog.close();
+  startNextWeekBtn.onclick=()=>startNextWeekDialog.showModal();
+  closeStartNextWeekDialog.onclick=cancelStartNextWeekBtn.onclick=()=>startNextWeekDialog.close();
+  confirmStartNextWeekBtn.onclick=startNextWeek;
   ensureWeek();
 })();
