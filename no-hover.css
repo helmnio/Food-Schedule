@@ -1,12 +1,15 @@
-/* Mobile-app style: controls keep their resting appearance on hover. */
-button:hover{background:var(--accent);color:#fff}
-button.secondary:hover{background:var(--card);color:var(--ink);border-color:var(--line)}
-button.danger:hover{background:#fff0f3;color:var(--danger)}
+/* Mobile-app controls: light bordered resting style, with no hover treatment. */
+button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:none!important}
+button.secondary{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:none!important}
+button.danger{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:none!important}
+button:hover:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border-color:var(--theme-mid,var(--line))!important;box-shadow:none!important}
+button.secondary:hover{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important}
+button.danger:hover{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important}
 .tab:hover{background:transparent;color:var(--muted)}
 .tab.active:hover{background:var(--accent-dark);color:#fff}
 .day .add-slot:hover{background:var(--card);border-color:var(--theme-mid,var(--line));color:var(--accent-dark)}
-.day-extra-chip button:hover,.chip button:hover{background:transparent;color:var(--accent-dark)}
+.day-extra-chip button:hover,.chip button:hover{background:transparent!important;color:var(--accent-dark)!important;border:0!important}
 .toggle-btn:hover{background:transparent;color:var(--muted)}
 .toggle-btn.active:hover{background:var(--card);color:var(--theme-deep,var(--ink))}
 .icon-btn:hover,.settings-btn:hover{background:transparent;color:var(--accent-dark)}
-.dish-result:hover,.suggestions button:hover{background:var(--card);color:var(--ink)}
+.dish-result:hover,.suggestions button:hover{background:var(--card)!important;color:var(--ink)!important}
