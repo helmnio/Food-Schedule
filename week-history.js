@@ -14,27 +14,52 @@
   function hasWeekContent(){return DAYS.some(day=>(state.schedule[day]||[]).length||(state.dayIngredients[day]||[]).length)||state.extras.length}
   function archiveCurrentWeek(key){if(!hasWeekContent())return;const items=history().filter(item=>item.key!==key);items.unshift(snapshot(key));saveHistory(items)}
   function resetWeek(){state.schedule=emptyDayMap();state.dayIngredients=emptyDayMap();state.dayChecks={};state.extras=[];state.shopping=[]}
+  function maxPlannableKey(){return nextKeyFrom(weekKey())}
+  function refreshStartNextWeekButton(){
+    const current=weekKey();
+    const active=localStorage.getItem(WEEK_KEY)||current;
+    const alreadyAhead=dateFromKey(active)>dateFromKey(current);
+    startNextWeekBtn.disabled=alreadyAhead;
+    startNextWeekBtn.textContent=alreadyAhead?'Next week planned':'Start next week';
+    startNextWeekBtn.title=alreadyAhead?'You can start another week once this planned week becomes the current week.':'';
+  }
   function ensureWeek(){
     const current=weekKey();
-    const stored=localStorage.getItem(WEEK_KEY);
-    if(!stored){localStorage.setItem(WEEK_KEY,current);return}
-    if(stored===current)return;
+    const maxAllowed=maxPlannableKey();
+    let stored=localStorage.getItem(WEEK_KEY);
+    if(!stored){localStorage.setItem(WEEK_KEY,current);refreshStartNextWeekButton();return}
+
+    if(dateFromKey(stored)>dateFromKey(maxAllowed)){
+      stored=maxAllowed;
+      localStorage.setItem(WEEK_KEY,stored);
+    }
+
+    if(stored===current){refreshStartNextWeekButton();return}
     const storedDate=dateFromKey(stored),currentDate=dateFromKey(current);
-    if(storedDate>currentDate)return;
+    if(storedDate>currentDate){refreshStartNextWeekButton();return}
+
     archiveCurrentWeek(stored);
     resetWeek();
     localStorage.setItem(WEEK_KEY,current);
     render();
+    refreshStartNextWeekButton();
   }
   function startNextWeek(){
-    const active=localStorage.getItem(WEEK_KEY)||weekKey();
-    const next=nextKeyFrom(active);
+    const current=weekKey();
+    const active=localStorage.getItem(WEEK_KEY)||current;
+    if(dateFromKey(active)>dateFromKey(current)){
+      startNextWeekDialog.close();
+      refreshStartNextWeekButton();
+      toast('Next week is already planned');
+      return;
+    }
     archiveCurrentWeek(active);
     resetWeek();
-    localStorage.setItem(WEEK_KEY,next);
+    localStorage.setItem(WEEK_KEY,maxPlannableKey());
     startNextWeekDialog.close();
     render();
-    toast('New week started');
+    refreshStartNextWeekButton();
+    toast('Next week started');
   }
   function dishName(slot){if(slot.type==='dish')return state.dishes.find(d=>d.id===slot.dishId)?.name||'Meal';return slot.label||slot.type.replace('-',' ')}
   function recentDishIds(){const seen=[];for(const wk of history())for(const day of DAYS)for(const slot of wk.schedule?.[day]||[])if(slot.type==='dish'&&!seen.includes(slot.dishId))seen.push(slot.dishId);return seen}
@@ -70,7 +95,7 @@
   quickMealSearch.addEventListener('input',()=>{const q=quickMealSearch.value.trim().toLowerCase();if(!q){quickMealSearchResults.innerHTML='';return}const results=state.dishes.filter(d=>d.name.toLowerCase().includes(q)||(d.ingredients||[]).some(i=>i.toLowerCase().includes(q))).sort((a,b)=>Number(b.favourite)-Number(a.favourite)||a.name.localeCompare(b.name)).slice(0,20);quickMealSearchResults.innerHTML=results.map(d=>`<button type="button" class="dish-result" data-quick-dish="${d.id}"><span>${d.favourite?'♥ ':''}${esc(d.name)}</span></button>`).join('')||'<p class="muted ingredient-empty">No matching meals.</p>'});
   closeQuickMealDialog.onclick=cancelQuickMealBtn.onclick=()=>{quickMealDialog.close();quickDay=null};
   viewHistoryBtn.onclick=()=>{renderHistory();historyDialog.showModal()};closeHistoryDialog.onclick=()=>historyDialog.close();
-  startNextWeekBtn.onclick=()=>startNextWeekDialog.showModal();
+  startNextWeekBtn.onclick=()=>{if(!startNextWeekBtn.disabled)startNextWeekDialog.showModal()};
   closeStartNextWeekDialog.onclick=cancelStartNextWeekBtn.onclick=()=>startNextWeekDialog.close();
   confirmStartNextWeekBtn.onclick=startNextWeek;
   ensureWeek();
