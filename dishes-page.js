@@ -43,7 +43,7 @@
       const dish=state.dishes.find(d=>d.id===card.dataset.editDish);
       const removable=activeDishTab==='mine'&&dish&&dish.source!=='mealdb'&&!dish.hiddenFromMyDishes;
       deleteDishBtn.hidden=!removable;
-      if(removable) deleteDishBtn.textContent='Remove from My dishes';
+      if(removable) deleteDishBtn.textContent='Remove';
     }
   });
 
