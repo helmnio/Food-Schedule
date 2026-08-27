@@ -1,20 +1,25 @@
 /* Mobile-app controls: light bordered buttons, tap states only, no hover styling. */
-button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
+button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch):not(.dish-subtab){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
 button.secondary{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
 button.danger{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
-button:hover:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border-color:var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
+button:hover:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch):not(.dish-subtab){background:var(--card)!important;color:var(--accent-dark)!important;border-color:var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
 button.secondary:hover{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
 button.danger:hover{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
-button:active:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){transform:translateY(1px);background:var(--soft)!important;box-shadow:0 1px 0 var(--theme-mid,var(--line))!important}
+button:active:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch):not(.dish-subtab){transform:translateY(1px);background:var(--soft)!important;box-shadow:0 1px 0 var(--theme-mid,var(--line))!important}
 button.secondary:active{transform:translateY(1px);background:var(--soft)!important;box-shadow:0 1px 0 var(--line)!important}
 button.danger:active{transform:translateY(1px);background:var(--card)!important;box-shadow:0 1px 0 var(--line)!important}
-.tab:hover{background:transparent;color:var(--muted)}
-.tab.active,.tab.active:hover{background:var(--accent-dark);color:#fff}
-.tab:active{background:var(--soft);color:var(--accent-dark)}
-.tab.active:active{background:var(--accent-dark);color:#fff}
-.toggle-btn:hover{background:transparent;color:var(--muted)}
-.toggle-btn.active,.toggle-btn.active:hover{background:var(--card);color:var(--theme-deep,var(--ink));box-shadow:0 1px 2px rgba(var(--theme-rgb),.14)}
-.toggle-btn:active{background:var(--soft);color:var(--accent-dark)}
+.tab{background:transparent!important;color:var(--muted)!important;box-shadow:none!important}
+.tab:hover{background:transparent!important;color:var(--muted)!important}
+.tab.active,.tab.active:hover,.tab.active:active{background:var(--accent-dark)!important;color:#fff!important;box-shadow:none!important}
+.tab:not(.active):active{background:var(--soft)!important;color:var(--accent-dark)!important}
+.toggle-btn{background:transparent!important;color:var(--muted)!important;box-shadow:none!important}
+.toggle-btn:hover{background:transparent!important;color:var(--muted)!important}
+.toggle-btn.active,.toggle-btn.active:hover,.toggle-btn.active:active{background:var(--card)!important;color:var(--theme-deep,var(--ink))!important;box-shadow:0 1px 2px rgba(var(--theme-rgb),.14)!important}
+.toggle-btn:not(.active):active{background:var(--soft)!important;color:var(--accent-dark)!important}
+.dish-subtab{background:var(--card)!important;color:var(--ink)!important;border:1px solid var(--line)!important;box-shadow:none!important}
+.dish-subtab:hover{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.dish-subtab.active,.dish-subtab.active:hover,.dish-subtab.active:active{background:var(--theme-deep)!important;color:#fff!important;border-color:var(--theme-deep)!important;box-shadow:none!important}
+.dish-subtab:not(.active):active{background:var(--soft)!important;color:var(--accent-dark)!important}
 .day .add-slot:hover{background:var(--card)!important;border-color:var(--theme-mid,var(--line))!important;color:var(--accent-dark)!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
 .day-extra-chip button:hover,.chip button:hover{background:transparent!important;color:var(--accent-dark)!important;border:0!important;box-shadow:none!important}
 .icon-btn:hover,.settings-btn:hover{background:transparent;color:var(--accent-dark)}
