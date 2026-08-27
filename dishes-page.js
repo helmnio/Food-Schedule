@@ -35,7 +35,15 @@
     dishGrid.innerHTML=results.length?results.map(d=>dishCard(d)).join(''):'<div class="dish-empty">No matching dishes found.</div>';
   };
 
-  document.addEventListener('click',e=>{const tab=e.target.closest('[data-dish-tab]');if(tab)setDishTab(tab.dataset.dishTab)});
+  document.addEventListener('click',e=>{
+    const tab=e.target.closest('[data-dish-tab]');
+    if(tab)setDishTab(tab.dataset.dishTab);
+    const card=e.target.closest('[data-edit-dish]');
+    if(card){
+      const dish=state.dishes.find(d=>d.id===card.dataset.editDish);
+      deleteDishBtn.hidden=activeDishTab!=='mine'||!dish||dish.source==='mealdb';
+    }
+  });
   if(typeof dishSearch!=='undefined'&&dishSearch)dishSearch.oninput=window.renderDishes;
   const mySearch=document.querySelector('#myDishSearch');if(mySearch)mySearch.oninput=window.renderDishes;
   setDishTab(activeDishTab);window.renderDishes();
