@@ -1,6 +1,9 @@
 (() => {
   const HISTORY_KEY='food-schedule-history-v1';
   const WEEK_KEY='food-schedule-current-week-v1';
+  const CURRENT_DATA_KEY='food-schedule-this-week-data-v1';
+  const NEXT_DATA_KEY='food-schedule-next-week-data-v1';
+  const VIEW_KEY='food-schedule-week-view-v1';
   let quickDay=null;
 
   function weekStart(date=new Date()){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const day=d.getDay()||7;d.setDate(d.getDate()-day+1);return d}
@@ -10,14 +13,30 @@
   function clone(v){return JSON.parse(JSON.stringify(v))}
   function history(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{return[]}}
   function saveHistory(items){localStorage.setItem(HISTORY_KEY,JSON.stringify(items.slice(0,26)))}
-  function snapshot(key){return {key,schedule:clone(state.schedule),dayIngredients:clone(state.dayIngredients),extras:clone(state.extras),savedAt:Date.now()}}
-  function hasWeekContent(){return DAYS.some(day=>(state.schedule[day]||[]).length||(state.dayIngredients[day]||[]).length)||state.extras.length}
-  function archiveCurrentWeek(key){if(!hasWeekContent())return;const items=history().filter(item=>item.key!==key);items.unshift(snapshot(key));saveHistory(items)}
-  function resetWeek(){state.schedule=emptyDayMap();state.dayIngredients=emptyDayMap();state.dayChecks={};state.extras=[];state.shopping=[]}
-  function maxPlannableKey(){return nextKeyFrom(weekKey())}
-  function refreshStartNextWeekButton(){const current=weekKey(),active=localStorage.getItem(WEEK_KEY)||current,alreadyAhead=dateFromKey(active)>dateFromKey(current);startNextWeekBtn.disabled=alreadyAhead;startNextWeekBtn.textContent=alreadyAhead?'Next week planned':'Start next week';startNextWeekBtn.title=alreadyAhead?'You can start another week once this planned week becomes the current week.':''}
-  function ensureWeek(){const current=weekKey(),maxAllowed=maxPlannableKey();let stored=localStorage.getItem(WEEK_KEY);if(!stored){localStorage.setItem(WEEK_KEY,current);refreshStartNextWeekButton();return}if(dateFromKey(stored)>dateFromKey(maxAllowed)){stored=maxAllowed;localStorage.setItem(WEEK_KEY,stored)}if(stored===current){refreshStartNextWeekButton();return}const storedDate=dateFromKey(stored),currentDate=dateFromKey(current);if(storedDate>currentDate){refreshStartNextWeekButton();return}archiveCurrentWeek(stored);resetWeek();localStorage.setItem(WEEK_KEY,current);render();refreshStartNextWeekButton()}
-  function startNextWeek(){const current=weekKey(),active=localStorage.getItem(WEEK_KEY)||current;if(dateFromKey(active)>dateFromKey(current)){startNextWeekDialog.close();refreshStartNextWeekButton();toast('Next week is already planned');return}archiveCurrentWeek(active);resetWeek();localStorage.setItem(WEEK_KEY,maxPlannableKey());startNextWeekDialog.close();render();refreshStartNextWeekButton();toast('Next week started')}
+  function snapshot(key){return {key,schedule:clone(state.schedule),dayIngredients:clone(state.dayIngredients),extras:clone(state.extras),dayChecks:clone(state.dayChecks||{}),savedAt:Date.now()}}
+  function hasSnapshotContent(data){return !!data&&(DAYS.some(day=>(data.schedule?.[day]||[]).length||(data.dayIngredients?.[day]||[]).length)||(data.extras||[]).length)}
+  function readData(storageKey){try{return JSON.parse(localStorage.getItem(storageKey)||'null')}catch{return null}}
+  function writeData(storageKey,data){localStorage.setItem(storageKey,JSON.stringify(data))}
+  function archiveSnapshot(data){if(!hasSnapshotContent(data))return;const items=history().filter(item=>item.key!==data.key);items.unshift(data);saveHistory(items)}
+  function emptySnapshot(key){return {key,schedule:emptyDayMap(),dayIngredients:emptyDayMap(),extras:[],dayChecks:{},savedAt:Date.now()}}
+  function loadSnapshot(data){state.schedule=clone(data?.schedule||emptyDayMap());state.dayIngredients=clone(data?.dayIngredients||emptyDayMap());state.extras=clone(data?.extras||[]);state.dayChecks=clone(data?.dayChecks||{});state.shopping=[]}
+  function currentView(){return localStorage.getItem(VIEW_KEY)==='next'?'next':'current'}
+  function saveVisibleWeek(){const key=currentView()==='next'?nextKeyFrom(weekKey()):weekKey();writeData(currentView()==='next'?NEXT_DATA_KEY:CURRENT_DATA_KEY,snapshot(key))}
+  function updateWeekHeading(){const eyebrow=document.querySelector('#week .section-head .eyebrow');if(eyebrow)eyebrow.textContent=currentView()==='next'?'NEXT WEEK':'THIS WEEK'}
+  function refreshWeekButton(){const next=readData(NEXT_DATA_KEY);if(currentView()==='next'){startNextWeekBtn.disabled=false;startNextWeekBtn.textContent='View this week';startNextWeekBtn.title=''}else if(next){startNextWeekBtn.disabled=false;startNextWeekBtn.textContent='View next week';startNextWeekBtn.title=''}else{startNextWeekBtn.disabled=false;startNextWeekBtn.textContent='Start next week';startNextWeekBtn.title=''}updateWeekHeading()}
+  function switchTo(view){saveVisibleWeek();const target=view==='next'?readData(NEXT_DATA_KEY):readData(CURRENT_DATA_KEY);if(!target)return;localStorage.setItem(VIEW_KEY,view);localStorage.setItem(WEEK_KEY,target.key);loadSnapshot(target);render();refreshWeekButton()}
+  function ensureWeek(){
+    const current=weekKey(),next=nextKeyFrom(current),oldActive=localStorage.getItem(WEEK_KEY),view=currentView();
+    if(view==='next')writeData(NEXT_DATA_KEY,snapshot(oldActive||next));else writeData(CURRENT_DATA_KEY,snapshot(oldActive||current));
+    let currentData=readData(CURRENT_DATA_KEY),nextData=readData(NEXT_DATA_KEY);
+    if(nextData&&nextData.key===current){if(currentData&&currentData.key!==current)archiveSnapshot(currentData);currentData=nextData;writeData(CURRENT_DATA_KEY,currentData);localStorage.removeItem(NEXT_DATA_KEY);nextData=null;localStorage.setItem(VIEW_KEY,'current');loadSnapshot(currentData);localStorage.setItem(WEEK_KEY,current);render()}
+    else if(currentData&&currentData.key!==current&&dateFromKey(currentData.key)<dateFromKey(current)){archiveSnapshot(currentData);currentData=emptySnapshot(current);writeData(CURRENT_DATA_KEY,currentData);localStorage.setItem(VIEW_KEY,'current');loadSnapshot(currentData);localStorage.setItem(WEEK_KEY,current);render()}
+    if(nextData&&nextData.key!==next){localStorage.removeItem(NEXT_DATA_KEY);if(currentView()==='next'){localStorage.setItem(VIEW_KEY,'current');loadSnapshot(readData(CURRENT_DATA_KEY)||emptySnapshot(current));render()}}
+    localStorage.setItem(WEEK_KEY,currentView()==='next'?next:current);refreshWeekButton()
+  }
+  function startNextWeek(){saveVisibleWeek();const next=nextKeyFrom(weekKey());if(!readData(NEXT_DATA_KEY))writeData(NEXT_DATA_KEY,emptySnapshot(next));localStorage.setItem(VIEW_KEY,'next');localStorage.setItem(WEEK_KEY,next);loadSnapshot(readData(NEXT_DATA_KEY));startNextWeekDialog.close();render();refreshWeekButton();toast('Next week started')}
+  function handleWeekButton(){if(currentView()==='next'){switchTo('current');return}if(readData(NEXT_DATA_KEY)){switchTo('next');return}startNextWeekDialog.showModal()}
+
   function dishName(slot){if(slot.type==='dish')return state.dishes.find(d=>d.id===slot.dishId)?.name||'Meal';return slot.label||slot.type.replace('-',' ')}
   function recentDishIds(){const seen=[];for(const wk of history())for(const day of DAYS)for(const slot of wk.schedule?.[day]||[])if(slot.type==='dish'&&!seen.includes(slot.dishId))seen.push(slot.dishId);return seen}
   function quickMeals(){const scheduled=new Set(DAYS.flatMap(day=>(state.schedule[day]||[]).filter(s=>s.type==='dish').map(s=>s.dishId)));const recent=recentDishIds();return [...state.dishes].filter(d=>!scheduled.has(d.id)).sort((a,b)=>{if(Number(a.favourite)!==Number(b.favourite))return Number(b.favourite)-Number(a.favourite);const ai=recent.indexOf(a.id),bi=recent.indexOf(b.id);const ar=ai<0?999:ai,br=bi<0?999:bi;return br-ar||a.name.localeCompare(b.name)}).slice(0,5)}
@@ -38,5 +57,9 @@
 
   document.addEventListener('click',e=>{const add=e.target.closest('[data-day]');if(add){e.preventDefault();e.stopImmediatePropagation();openQuick(add.dataset.day);return}const q=e.target.closest('[data-quick-dish]');if(q){addQuick(q.dataset.quickDish);return}const copy=e.target.closest('[data-copy-history]');if(copy)copyWeek(Number(copy.dataset.copyHistory))},true);
   quickMealSearch.addEventListener('input',()=>{const q=quickMealSearch.value.trim().toLowerCase();if(!q){quickMealSearchResults.innerHTML='';return}const results=state.dishes.filter(d=>d.name.toLowerCase().includes(q)||(d.ingredients||[]).some(i=>i.toLowerCase().includes(q))).sort((a,b)=>Number(b.favourite)-Number(a.favourite)||a.name.localeCompare(b.name)).slice(0,20);quickMealSearchResults.innerHTML=results.map(d=>`<button type="button" class="dish-result" data-quick-dish="${d.id}"><span>${d.favourite?'♥ ':''}${esc(d.name)}</span></button>`).join('')||'<p class="muted ingredient-empty">No matching meals.</p>'});
-  closeQuickMealDialog.onclick=cancelQuickMealBtn.onclick=()=>{quickMealDialog.close();quickDay=null};viewHistoryBtn.onclick=()=>{renderHistory();historyDialog.showModal()};closeHistoryDialog.onclick=()=>historyDialog.close();startNextWeekBtn.onclick=()=>{if(!startNextWeekBtn.disabled)startNextWeekDialog.showModal()};closeStartNextWeekDialog.onclick=cancelStartNextWeekBtn.onclick=()=>startNextWeekDialog.close();confirmStartNextWeekBtn.onclick=startNextWeek;ensureWeek();
+  closeQuickMealDialog.onclick=cancelQuickMealBtn.onclick=()=>{quickMealDialog.close();quickDay=null};
+  viewHistoryBtn.onclick=()=>{renderHistory();historyDialog.showModal()};closeHistoryDialog.onclick=()=>historyDialog.close();
+  startNextWeekBtn.onclick=handleWeekButton;
+  closeStartNextWeekDialog.onclick=cancelStartNextWeekBtn.onclick=()=>startNextWeekDialog.close();confirmStartNextWeekBtn.onclick=startNextWeek;
+  ensureWeek();
 })();
