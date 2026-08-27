@@ -11,7 +11,7 @@
     return `<article class="dish-card ${compact ? 'dish-card-compact' : ''}" data-edit-dish="${dish.id}"><div class="dish-card-top"><small class="dish-source">${source}</small><span class="heart">${dish.favourite ? '♥' : '♡'}</span></div><h3>${esc(dish.name)}</h3><div class="ingredients">${ingredientText}${more}</div></article>`;
   }
 
-  function personalDishes() { return state.dishes.filter(d => d.source !== 'mealdb').sort((a,b)=>Number(b.favourite)-Number(a.favourite)||a.name.localeCompare(b.name)); }
+  function personalDishes() { return state.dishes.filter(d => d.source !== 'mealdb' && !d.hiddenFromMyDishes).sort((a,b)=>Number(b.favourite)-Number(a.favourite)||a.name.localeCompare(b.name)); }
   function favouriteDishes() { return state.dishes.filter(d => d.favourite).sort((a,b)=>a.name.localeCompare(b.name)); }
   function catalogueDishes() { return state.dishes.filter(d => d.source === 'mealdb'); }
   function matches(d,q){return !q||d.name.toLowerCase().includes(q)||(d.ingredients||[]).some(i=>i.toLowerCase().includes(q))}
@@ -41,9 +41,22 @@
     const card=e.target.closest('[data-edit-dish]');
     if(card){
       const dish=state.dishes.find(d=>d.id===card.dataset.editDish);
-      deleteDishBtn.hidden=activeDishTab!=='mine'||!dish||dish.source==='mealdb';
+      const removable=activeDishTab==='mine'&&dish&&dish.source!=='mealdb'&&!dish.hiddenFromMyDishes;
+      deleteDishBtn.hidden=!removable;
+      if(removable) deleteDishBtn.textContent='Remove from My dishes';
     }
   });
+
+  deleteDishBtn.onclick=()=>{
+    if(!editingId||activeDishTab!=='mine')return;
+    const dish=state.dishes.find(d=>d.id===editingId);
+    if(!dish||dish.source==='mealdb')return;
+    dish.hiddenFromMyDishes=true;
+    closeDish();
+    render();
+    toast('Removed from My dishes');
+  };
+
   if(typeof dishSearch!=='undefined'&&dishSearch)dishSearch.oninput=window.renderDishes;
   const mySearch=document.querySelector('#myDishSearch');if(mySearch)mySearch.oninput=window.renderDishes;
   setDishTab(activeDishTab);window.renderDishes();
