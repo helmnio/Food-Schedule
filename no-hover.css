@@ -1,15 +1,21 @@
-/* Mobile-app controls: light bordered resting style, with no hover treatment. */
-button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:none!important}
-button.secondary{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:none!important}
-button.danger{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:none!important}
-button:hover:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border-color:var(--theme-mid,var(--line))!important;box-shadow:none!important}
-button.secondary:hover{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important}
-button.danger:hover{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important}
+/* Mobile-app controls: light bordered buttons, tap states only, no hover styling. */
+button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
+button.secondary{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
+button.danger{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
+button:hover:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){background:var(--card)!important;color:var(--accent-dark)!important;border-color:var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
+button.secondary:hover{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
+button.danger:hover{background:var(--card)!important;color:var(--danger)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
+button:active:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch){transform:translateY(1px);background:var(--soft)!important;box-shadow:0 1px 0 var(--theme-mid,var(--line))!important}
+button.secondary:active{transform:translateY(1px);background:var(--soft)!important;box-shadow:0 1px 0 var(--line)!important}
+button.danger:active{transform:translateY(1px);background:var(--card)!important;box-shadow:0 1px 0 var(--line)!important}
 .tab:hover{background:transparent;color:var(--muted)}
-.tab.active:hover{background:var(--accent-dark);color:#fff}
-.day .add-slot:hover{background:var(--card);border-color:var(--theme-mid,var(--line));color:var(--accent-dark)}
-.day-extra-chip button:hover,.chip button:hover{background:transparent!important;color:var(--accent-dark)!important;border:0!important}
+.tab.active,.tab.active:hover{background:var(--accent-dark);color:#fff}
+.tab:active{background:var(--soft);color:var(--accent-dark)}
+.tab.active:active{background:var(--accent-dark);color:#fff}
 .toggle-btn:hover{background:transparent;color:var(--muted)}
-.toggle-btn.active:hover{background:var(--card);color:var(--theme-deep,var(--ink))}
+.toggle-btn.active,.toggle-btn.active:hover{background:var(--card);color:var(--theme-deep,var(--ink));box-shadow:0 1px 2px rgba(var(--theme-rgb),.14)}
+.toggle-btn:active{background:var(--soft);color:var(--accent-dark)}
+.day .add-slot:hover{background:var(--card)!important;border-color:var(--theme-mid,var(--line))!important;color:var(--accent-dark)!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
+.day-extra-chip button:hover,.chip button:hover{background:transparent!important;color:var(--accent-dark)!important;border:0!important;box-shadow:none!important}
 .icon-btn:hover,.settings-btn:hover{background:transparent;color:var(--accent-dark)}
 .dish-result:hover,.suggestions button:hover{background:var(--card)!important;color:var(--ink)!important}
