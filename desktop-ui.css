@@ -11,3 +11,14 @@
   .slot{cursor:pointer}
   .swipe-hint{display:none}
 }
+
+.chip button{
+  align-self:center;
+  height:16px;
+  width:16px;
+  min-width:16px;
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
