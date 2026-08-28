@@ -1,13 +1,13 @@
-@media (min-width: 901px){
+@media (min-width: 1025px){
   body{padding-bottom:0;display:flex;flex-direction:column}
   .topbar{order:1}
   .bottom-nav{order:2}
   main{order:3}
   body>dialog,body>#toast,body>[hidden]{order:4}
-  .topbar,main,.bottom-nav{max-width:1440px;width:100%;margin-left:auto;margin-right:auto}
+  .topbar,main{max-width:1440px;width:100%;margin-left:auto;margin-right:auto}
   .topbar{padding-left:24px;padding-right:24px}
   main{padding-left:24px;padding-right:24px;padding-bottom:48px}
-  .bottom-nav{position:relative;left:auto;bottom:auto;transform:none;width:calc(100% - 48px);margin:0 auto 6px;padding:5px;z-index:auto}
+  .bottom-nav{position:relative;left:auto;bottom:auto;transform:none;width:auto;align-self:flex-start;margin:0 0 6px max(24px,calc((100% - 1440px)/2 + 24px));padding:5px;z-index:auto}
   .slot{cursor:pointer}
   .swipe-hint{display:none}
 }
