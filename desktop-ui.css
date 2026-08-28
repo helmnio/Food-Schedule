@@ -1,5 +1,9 @@
 @media (min-width: 901px){
-  body{padding-bottom:0}
+  body{padding-bottom:0;display:flex;flex-direction:column}
+  .topbar{order:1}
+  .bottom-nav{order:2}
+  main{order:3}
+  body>dialog,body>#toast,body>[hidden]{order:4}
   .topbar,main,.bottom-nav{max-width:1440px;width:100%;margin-left:auto;margin-right:auto}
   .topbar{padding-left:24px;padding-right:24px}
   main{padding-left:24px;padding-right:24px;padding-bottom:48px}
