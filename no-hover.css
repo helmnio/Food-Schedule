@@ -1,3 +1,4 @@
+@import url('desktop-ui.css');
 /* Mobile-app controls: light bordered buttons, tap states only, no hover styling. */
 button:not(.danger-solid):not(.tab):not(.toggle-btn):not(.icon-btn):not(.settings-btn):not(.action-edit):not(.action-switch):not(.dish-subtab){background:var(--card)!important;color:var(--accent-dark)!important;border:1px solid var(--theme-mid,var(--line))!important;box-shadow:0 2px 0 var(--theme-mid,var(--line))!important}
 button.secondary{background:var(--card)!important;color:var(--ink)!important;border-color:var(--line)!important;box-shadow:0 2px 0 var(--line)!important}
