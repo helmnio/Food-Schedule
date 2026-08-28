@@ -1,13 +1,15 @@
+.topbar{align-items:flex-start}
+.topbar .settings-btn{width:22px;height:22px;min-width:22px;padding:0;align-self:flex-start}
+.topbar .settings-btn svg{width:22px;height:22px}
+
 @media (min-width: 1025px){
   body{padding-bottom:0;display:flex;flex-direction:column}
-  .topbar{order:1;align-items:flex-start}
+  .topbar{order:1}
   .bottom-nav{order:2}
   main{order:3}
   body>dialog,body>#toast,body>[hidden]{order:4}
   .topbar,main{max-width:1440px;width:100%;margin-left:auto;margin-right:auto}
   .topbar{padding-left:24px;padding-right:24px}
-  .topbar .settings-btn{width:22px;height:22px;min-width:22px;padding:0;align-self:flex-start}
-  .topbar .settings-btn svg{width:22px;height:22px}
   main{padding-left:24px;padding-right:24px;padding-bottom:48px}
   .bottom-nav{position:relative;left:auto;bottom:auto;transform:none;width:auto;align-self:flex-start;margin:0 0 6px max(24px,calc((100% - 1440px)/2 + 24px));padding:5px;z-index:auto}
   .slot{cursor:pointer}
