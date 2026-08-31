@@ -69,6 +69,9 @@
     }
   }, true);
 
+  /* Keep legacy controls in the DOM because app.js references them when opening/editing meals. */
+  const dishLegacyRow = document.querySelector('#customIngredientInput')?.closest('.custom-ingredient-row');
+  if (dishLegacyRow) dishLegacyRow.hidden = true;
   const mealLegacyRow = document.querySelector('#mealCustomIngredientInput')?.closest('.custom-ingredient-row');
-  if (mealLegacyRow) mealLegacyRow.remove();
+  if (mealLegacyRow) mealLegacyRow.hidden = true;
 })();
